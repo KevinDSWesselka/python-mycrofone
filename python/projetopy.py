@@ -10,17 +10,39 @@
 
 import speech_recognition as sr
 
-def reconhecer_fala():    
-    microfone = sr.Recognizer() #Habilita o microfone
-    with sr.Microphone() as source:        
-        microfone.adjust_for_ambient_noise(source)#Reducao de ruido disponivel na speech_recognition        
-        print("Diga alguma coisa: ")        
-        audio = microfone.listen(source) #guarda o audio falado na variavel 'audio', o audio é finalizado nas pausas grandes
+def iniciar_gravacao():
+    microfone = sr.Recognizer()
+    with sr.Microphone() as source:
+        microfone.adjust_for_ambient_noise(source)
+        print("Diga algo para iniciar a gravação: ")
+        audio = microfone.listen(source)
         try:
-            frase = microfone.recognize_google(audio,language='pt-BR') #audio sera interpretado na lingua portuguesa            
-            print("Você disse: " + frase)        
-        except:
-            print("Não entendi o que você disse!")
-        return frase
+            frase = microfone.recognize_google(audio, language='pt-BR')
+            if 'início' in frase:  # Verifica se a palavra-chave 'Inicio' está na frase
+                print("Comando 'Início' detectado. Iniciando a gravação.")
+                return True
+            else:
+                print("Comando não reconhecido. Tente novamente.")
+                return False
+        except sr.UnknownValueError:
+            print("Não foi possível entender o comando. Tente novamente.")
+            return False
+
+def reconhecer_fala():
+    if iniciar_gravacao():
+        microfone = sr.Recognizer()
+        with sr.Microphone() as source:
+            microfone.adjust_for_ambient_noise(source)
+            print("Comece a falar: ")
+            audio = microfone.listen(source)
+            try:
+                frase = microfone.recognize_google(audio, language='pt-BR')
+                print("Você disse: " + frase)
+            except sr.UnknownValueError:
+                print("Não entendi o que você disse!")
+                frase = ""
+            return frase
+    else:
+        return ""
 
 reconhecer_fala()
