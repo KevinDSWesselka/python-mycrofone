@@ -40,12 +40,10 @@ def gravar_audio(lista_apontamentos):
                     print("Comando 'Pausa' detectado. Gravação pausada.")
                     frase = frase.replace('pausa', '')
                     print("Você disse: " + frase)
-                    return False
                 if 'parar' in frase.lower():
                     print("Comando 'Parar' detectado. Gravação finalizada.")
                     frase = frase.replace('parar', '')
-                    print("Você disse: " + frase)
-                    return True
+                    return 
                 else:
                     print("Você disse: " + frase)
                     # Create dictionary for the Salesforce object
@@ -59,7 +57,6 @@ def gravar_audio(lista_apontamentos):
                     lista_apontamentos.append(novo_apontamento)
             except sr.UnknownValueError:
                 print("Não entendi o que você disse!")
-                frase = ""
             except sr.RequestError:
                 print("Erro ao fazer a requisição para o serviço de reconhecimento de fala.")
             except KeyboardInterrupt:
